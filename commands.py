@@ -1,6 +1,6 @@
 from control import *
-
 import matplotlib.pyplot as plt
+from colors import *
 variables = {}
 
 class Commands:
@@ -12,7 +12,9 @@ class Commands:
                         "bode": self.bodePlot,
                         "nyquist": self.nyquistPlot,
                         "stepinfo": self.stepInfo,
-                        "ufeedback": self.unityFeedback}
+                        "ufeedback": self.unityFeedback,
+                        "bye": self.bye,
+                        "allCommands": self.allCommands}
 
     def transferFunction(self, args):
         if len(args) != 3:
@@ -20,6 +22,10 @@ class Commands:
             return
         num = args[0].split(',')
         den = args[1].split(',')
+
+        if ('' in num) or ('' in den):
+            print("Format Error!")
+            return
 
         for i in range(len(num)):
             num[i] = float(num[i])
@@ -90,7 +96,6 @@ class Commands:
             return
         tmp = feedback(variables[args[0]],1)
         variables.update({args[1]:tmp})
-
         
 
     def stepInfo(self, args):
@@ -104,4 +109,20 @@ class Commands:
         for k in info:
             print(k + ": {:.3f}".format(info[k]))
 
-    
+    def bye(self, args):
+        if len(args) != 0:
+            print("Number Of Arguments Not Right!")
+            return
+        print('Bye!')
+        exit()
+    def allCommands(self, args):
+        if len(args) != 0:
+            print("Number Of Arguments Not Right!")
+            return
+        
+        print()
+        print(bcolors.OKGREEN + bcolors.UNDERLINE +"Available Commands" + bcolors.ENDC)
+        print()
+        keys = list(self.commands.keys())
+        for c in keys:
+            print("---> "+bcolors.BOLD + c + bcolors.ENDC)
