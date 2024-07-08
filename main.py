@@ -1,0 +1,18 @@
+import interaction as i
+import commander as c
+
+def main():
+    i.Interaction()
+    com = c.Commander()
+
+    while True:
+        try:
+            command = input(">> ")
+            if command != "":
+                com.getCommand(command)
+        except KeyboardInterrupt:
+            print("\nBye!")
+            exit()
+
+if __name__ == "__main__":
+    main()
