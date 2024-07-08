@@ -5,13 +5,14 @@ variables = {}
 
 class Commands:
     def __init__(self):
-        self.commands = {"Help": self.Help,
-                        "tf": self.transferFunction,
+        self.commands = {"tf": self.transferFunction,
                         "printVar": self.printVar,
                         "step": self.stepResponse,
                         "rlocus": self.rootLocus,
                         "bode": self.bodePlot,
-                        "nyquist": self.nyquistPlot}
+                        "nyquist": self.nyquistPlot,
+                        "stepinfo": self.stepInfo,
+                        "ufeedback": self.unityFeedback}
 
     def transferFunction(self, args):
         if len(args) != 3:
@@ -73,7 +74,6 @@ class Commands:
             plt.figure()
 
         plt.ion()
-        # plt.grid(True)
         bode_plot(variables[args[0]], title="Bode Plot for " + args[0])
         plt.show()
 
@@ -83,7 +83,25 @@ class Commands:
             return
         nyquist(variables[args[0]])
         plt.show()
+    
+    def unityFeedback(self, args):
+        if len(args) != 2:
+            print("Number Of Arguments Not Right!")
+            return
+        tmp = feedback(variables[args[0]],1)
+        variables.update({args[1]:tmp})
 
-    def Help(self,args):
-        print("Called Help Command",args)
+        
+
+    def stepInfo(self, args):
+        if len(args) != 1:
+            print("Number Of Arguments Not Right!")
+            return
+        info = step_info(variables[args[0]])
+
+        print()
+
+        for k in info:
+            print(k + ": {:.3f}".format(info[k]))
+
     

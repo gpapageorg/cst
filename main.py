@@ -1,5 +1,8 @@
 import interaction as i
 import commander as c
+import readline
+
+history = []
 
 def main():
     i.Interaction()
@@ -9,6 +12,7 @@ def main():
         try:
             command = input(">> ")
             if command != "":
+                history.append(command)
                 com.getCommand(command)
         except KeyboardInterrupt:
             print("\nBye!")
