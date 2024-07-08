@@ -1,4 +1,5 @@
-from control.matlab import *
+from control import *
+
 import matplotlib.pyplot as plt
 variables = {}
 
@@ -9,7 +10,8 @@ class Commands:
                         "printVar": self.printVar,
                         "step": self.stepResponse,
                         "rlocus": self.rootLocus,
-                        "bode": self.bodePlot}
+                        "bode": self.bodePlot,
+                        "nyquist": self.nyquistPlot}
 
     def transferFunction(self, args):
         if len(args) != 3:
@@ -24,7 +26,7 @@ class Commands:
         for i in range(len(den)):
             den[i] = float(den[i])
 
-        variables.update({args[2]:tf(num,den)})
+        variables.update({args[2]:tf(num,den,name = args[2])})
 
     def printVar(self, args):
         if len(args) != 1:
@@ -36,32 +38,52 @@ class Commands:
         print(variables[args[0]])
 
     def stepResponse(self, args):
-        if len(args) != 1:
+        if len(args) != 1 and args[1] != 't':
             print("Number Of Arguments Not Right!")
             return
-        yout, T = step(variables[args[0]])
+        if len(args) == 2 and args[1] == 't':
+            plt.figure()
 
-        plt.plot(T,yout)
-        plt.grid()
+
+        plt.ion()
+        T, yout = step_response(variables[args[0]])
+
+        plt.plot(T,yout, label = args[0])
+        plt.grid(True)
         plt.xlabel("Time (s)")
         plt.ylabel("Amplitude")
+        plt.legend()
         plt.show()
 
     def rootLocus(self,args):
-        if len(args) != 1:
+        if len(args) >= 2:
             print("Number Of Arguments Not Right!")
             return
+        
+        plt.ion()
         rlocus(variables[args[0]])
         plt.show()
     
     def bodePlot(self,args):
+        if len(args) != 1 and args[1] != 't':
+            print("Number Of Arguments Not Right!")
+            return
+        
+        if len(args) == 2 and args[1] == 't':
+            plt.figure()
+
+        plt.ion()
+        # plt.grid(True)
+        bode_plot(variables[args[0]], title="Bode Plot for " + args[0])
+        plt.show()
+
+    def nyquistPlot(self, args):
         if len(args) != 1:
             print("Number Of Arguments Not Right!")
             return
-        bode(variables[args[0]])
+        nyquist(variables[args[0]])
         plt.show()
 
     def Help(self,args):
         print("Called Help Command",args)
     
-c = Commands()
