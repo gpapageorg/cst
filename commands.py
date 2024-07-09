@@ -5,7 +5,8 @@ variables = {}
 
 class Commands:
     def __init__(self):
-        self.commands = {"tf": self.transferFunction,
+        self.commands = {"ss": self.stateSpace,
+                        "tf": self.transferFunction,
                         "printVar": self.printVar,
                         "step": self.stepResponse,
                         "rlocus": self.rootLocus,
@@ -34,6 +35,31 @@ class Commands:
             den[i] = float(den[i])
 
         variables.update({args[2]:tf(num,den,name = args[2])})
+
+    def stateSpace(self, args):
+        if len(args) != 5:
+            print("Number Of Arguments Not Right!")
+            return
+        
+        '''Splitting string to get A, B, C, D matrices'''
+        aMat = self.splitMat(args[0])
+        bMat = self.splitMat(args[1])
+        cMat = self.splitMat(args[2])
+        dMat = self.splitMat(args[3])
+        s = ss(aMat,bMat,cMat,dMat)
+        variables.update({args[4]:s})
+
+    
+    def splitMat(self, st):
+        mat = st.split(';')
+
+        for i in range(len(mat)):
+            b = mat[i].split(',')
+            for c in range(len(b)):
+                b[c] = float(b[c])
+            mat[i] = b
+        return mat
+                
 
     def printVar(self, args):
         if len(args) != 1:
