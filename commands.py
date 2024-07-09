@@ -15,7 +15,8 @@ class Commands:
                         "stepinfo": self.stepInfo,
                         "ufeedback": self.unityFeedback,
                         "bye": self.bye,
-                        "allCommands": self.allCommands}
+                        "allCommands": self.allCommands,
+                        "sv": self.storeVariable}
 
     def transferFunction(self, args):
         if len(args) != 3:
@@ -72,7 +73,10 @@ class Commands:
         if (args[0] == '*'):
             print(variables)
             return
-        print(variables[args[0]])
+        try:
+            print(variables[args[0]])
+        except:
+            print("Error! Probably Variable Does not Exist")
 
     def stepResponse(self, args):
         if len(args) != 1 and args[1] != 't':
@@ -139,12 +143,25 @@ class Commands:
         for k in info:
             print(k + ": {:.3f}".format(info[k]))
 
+    def storeVariable(self, args):
+        if len(args) != 2:
+            print("Number Of Arguments Not Right!")
+            return 
+        try:
+            var = float(args[0])
+        except:
+            print(bcolors.FAIL + bcolors.BOLD +"Type Error!"+bcolors.ENDC)
+            return
+
+        variables.update({args[1]:var})
+
     def bye(self, args):
         if len(args) != 0:
             print("Number Of Arguments Not Right!")
             return
         print('Bye!')
         exit()
+
     def allCommands(self, args):
         if len(args) != 0:
             print("Number Of Arguments Not Right!")
@@ -156,3 +173,17 @@ class Commands:
         keys = list(self.commands.keys())
         for c in keys:
             print("---> "+bcolors.BOLD + c + bcolors.ENDC)
+
+
+    def preprocessor(self, args):
+        if args[0] != 'sv':
+            for i in range(1, len(args[1:])):
+                if args[i].isalpha():
+                    try:
+                        args[i] = str(variables[args[i]])
+                    except:
+                        print(bcolors.FAIL + bcolors.BOLD + "Error! Probably Variable '" + args[i] + "' Does not Exist" + bcolors.ENDC)
+                        return
+        self.commands[args[0]](args[1:])
+
+                    
