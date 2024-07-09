@@ -46,7 +46,11 @@ class Commands:
         bMat = self.splitMat(args[1])
         cMat = self.splitMat(args[2])
         dMat = self.splitMat(args[3])
-        s = ss(aMat,bMat,cMat,dMat)
+        try:
+            s = ss(aMat,bMat,cMat,dMat)
+        except ValueError:
+            print("Error! Matrices Not Given Right")
+            return
         variables.update({args[4]:s})
 
     
