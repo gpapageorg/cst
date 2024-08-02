@@ -1,5 +1,6 @@
 from control import *
 import matplotlib.pyplot as plt
+import commandDesc as cD
 from colors import *
 variables = {}
 
@@ -17,6 +18,7 @@ class Commands:
                         "bye": self.bye,
                         "allCommands": self.allCommands,
                         "sv": self.storeVariable}
+
 
     def transferFunction(self, args):
         if len(args) != 3:
@@ -170,9 +172,10 @@ class Commands:
         print()
         print(bcolors.OKGREEN + bcolors.UNDERLINE +"Available Commands" + bcolors.ENDC)
         print()
-        keys = list(self.commands.keys())
+        keys = list(cD.desc.keys())
         for c in keys:
-            print("---> "+bcolors.BOLD + c + bcolors.ENDC)
+            print("---> "+bcolors.BOLD + c + " >>> ",end=' ')
+            print(bcolors.OKBLUE + cD.desc[c]+ bcolors.ENDC)
 
 
     def preprocessor(self, args):
