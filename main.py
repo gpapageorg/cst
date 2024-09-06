@@ -1,6 +1,7 @@
 import interaction as i
 import commander as c
 import readline
+from graphics import Graphics
 
 def main():
     i.Interaction()
@@ -16,4 +17,6 @@ def main():
             exit()
 
 if __name__ == "__main__":
-    main()
+    # main()
+    a = Graphics()
+    

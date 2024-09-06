@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import commandDesc as cD
 from colors import *
 variables = {}
-
+notToBePrepossed = ['sv', 'ufeedback']
 class Commands:
     def __init__(self):
         self.commands = {"ss": self.stateSpace,
@@ -131,9 +131,14 @@ class Commands:
         if len(args) != 2:
             print("Number Of Arguments Not Right!")
             return
+    
+        if args[0] not in variables.keys():
+            print("Variable " + args[0] + " Not Found!")
+            return
         
         tmp = feedback(variables[args[0]],1)
         variables.update({args[1]:tmp})
+
         
 
     def stepInfo(self, args):
@@ -181,7 +186,8 @@ class Commands:
 
 
     def preprocessor(self, args):
-        if args[0] != 'sv' and args[0] != 'ufeedback':
+
+        if args[0] not in notToBePrepossed:
             for i in range(1, len(args[1:])):
                 if args[i].isalpha():
                     try:
