@@ -1,0 +1,12 @@
+desc = {"ss": "State Space Model, Usage: ss matA matB matC matD dstVar, For matrix use ',' for collumn, ';' for row.",
+        "tf": "Transfer Function Model, Usage: tf num den dstVar ",
+        "printVar":"Print Variable, Usage: printVar var",
+        "step": "Step Response, Usage: step sys",
+        "rlocus": "Root Locus, Usage: rlocus sys",
+        "bode": "Bode Plot, Usage: bode sys",
+        "nyquist": "Nyquist Plot, Usage: nyquist sys",
+        "stepinfo": "Step Repsponse Info, Usage stepinfo sys",
+        "ufeedback": "Unity Feedback, Usage ufeedback InVar DstVar",
+        "bye": "Bye...",
+        "allCommands": "Print All Commands",
+        "sv": "Save Value to Variable, Usage sv G 5 -> G = 5"}
