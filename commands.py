@@ -1,5 +1,6 @@
 from control import *
 import matplotlib.pyplot as plt
+import commandDesc as cD
 from colors import *
 variables = {}
 
@@ -17,6 +18,7 @@ class Commands:
                         "bye": self.bye,
                         "allCommands": self.allCommands,
                         "sv": self.storeVariable}
+
 
     def transferFunction(self, args):
         if len(args) != 3:
@@ -121,6 +123,7 @@ class Commands:
         if len(args) != 1:
             print("Number Of Arguments Not Right!")
             return
+        print(args[0])
         nyquist(variables[args[0]])
         plt.show()
     
@@ -128,6 +131,7 @@ class Commands:
         if len(args) != 2:
             print("Number Of Arguments Not Right!")
             return
+        
         tmp = feedback(variables[args[0]],1)
         variables.update({args[1]:tmp})
         
@@ -170,13 +174,14 @@ class Commands:
         print()
         print(bcolors.OKGREEN + bcolors.UNDERLINE +"Available Commands" + bcolors.ENDC)
         print()
-        keys = list(self.commands.keys())
+        keys = list(cD.desc.keys())
         for c in keys:
-            print("---> "+bcolors.BOLD + c + bcolors.ENDC)
+            print("---> "+bcolors.BOLD + c + " >>> ",end=' ')
+            print(bcolors.OKBLUE + cD.desc[c]+ bcolors.ENDC)
 
 
     def preprocessor(self, args):
-        if args[0] != 'sv':
+        if args[0] != 'sv' and args[0] != 'ufeedback':
             for i in range(1, len(args[1:])):
                 if args[i].isalpha():
                     try:
@@ -185,5 +190,5 @@ class Commands:
                         print(bcolors.FAIL + bcolors.BOLD + "Error! Probably Variable '" + args[i] + "' Does not Exist" + bcolors.ENDC)
                         return
         self.commands[args[0]](args[1:])
-
+        
                     
