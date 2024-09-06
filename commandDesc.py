@@ -6,7 +6,7 @@ desc = {"ss": "State Space Model, Usage: ss matA matB matC matD dstVar, For matr
         "bode": "Bode Plot, Usage: bode sys",
         "nyquist": "Nyquist Plot, Usage: nyquist sys",
         "stepinfo": "Step Repsponse Info, Usage stepinfo sys",
-        "ufeedback": "Unity Feedback, Usage ufeedback dstVar InVar",
+        "ufeedback": "Unity Feedback, Usage ufeedback InVar DstVar",
         "bye": "Bye...",
         "allCommands": "Print All Commands",
         "sv": "Save Value to Variable, Usage sv G 5 -> G = 5"}
