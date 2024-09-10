@@ -3,7 +3,8 @@ from colors import *
 import subprocess
 
 class Interaction:
-    def __init__(self):
+    def __init__(self, gra):
+        self.gra = gra
         subprocess.call("clear")
         st = '''
   ____     _          _     
@@ -13,8 +14,11 @@ class Interaction:
  \____|___/_____\__,_|_.__/ 
 '''
 
-        print(bcolors.HEADER + bcolors.BOLD + st + bcolors.ENDC)
+        self.gra.update_terminal_log("Welcome To CsLab!\n", "green", True)
         self.printAvailCommands()
+
+        # self.gra.update_terminal_log(st,"green")
+        # self.printAvailCommands()
     
     def printAvailCommands(self):
-        Commands().allCommands([])
+        Commands(self.gra).allCommands([])
