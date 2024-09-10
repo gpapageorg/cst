@@ -4,7 +4,6 @@ class Commander:
         self.app = app
         self.cList = c.Commands(app)
 
-
     def getCommand(self,command):
         args = command.split()
         if args[0] in self.cList.commands.keys():
@@ -13,3 +12,4 @@ class Commander:
             return self.cList.preprocessor(args)
         else:
             print("Command '" + command + "' Not Found!")
+            self.app.update_terminal_log("Command '" + command + "' Not Found!", "red", True)

@@ -6,7 +6,7 @@ import multiprocessing
 
 variables = {}
 notToBePrepossed = ['sv', 'ufeedback']
-toBeMultiprocessed = ['step','bode', 'nyquist']
+toBeMultiprocessed = ['step','bode', 'nyquist','rlocus']
 class Commands:
     def __init__(self, gra = 0):
         self.commands = {"ss": self.stateSpace,
@@ -26,13 +26,15 @@ class Commands:
 
     def transferFunction(self, args):
         if len(args) != 3:
-            self.gra.update_terminal_log("Number Of Arguments Not Right!\n", "red")
+            self.gra.update_terminal_log("Number Of Arguments Not Right!\n", "red",True)
             
         num = args[0].split(',')
         den = args[1].split(',')
 
         if ('' in num) or ('' in den):
             print("Format Error!")
+            self.gra.update_terminal_log("Format Error!\n", "red",True)
+
             return
 
         for i in range(len(num)):
@@ -47,7 +49,7 @@ class Commands:
     def stateSpace(self, args):
         if len(args) != 5:
             # print("Number Of Arguments Not Right!")
-            self.gra.update_terminal_log("Number Of Arguments Not Right!",'red',True)
+            self.gra.update_terminal_log("Number Of Arguments Not Right!\n",'red',True)
             return
         
         '''Splitting string to get A, B, C, D matrices'''
@@ -59,9 +61,11 @@ class Commands:
             s = ss(aMat,bMat,cMat,dMat)
         except ValueError:
             # print("Error! Matrices Not Given Right")
-            self.gra.update_terminal_log("Error! Matrices Not Given Right",'red',True)
+            self.gra.update_terminal_log("Error! Matrices Not Given Righ\nt",'red',True)
             return
         variables.update({args[4]:s})
+        # self.gra.update_terminal_log("G = ", "green")
+        self.gra.update_terminal_log(str(variables[args[4]]), "green")
 
     
     def splitMat(self, st):
@@ -78,7 +82,7 @@ class Commands:
     def printVar(self, args):
         if len(args) != 1:
             # print("Number Of Arguments Not Right!")
-            self.gra.update_terminal_log("Number Of Arguments Not Right!",'red',True)
+            self.gra.update_terminal_log("Number Of Arguments Not Right!\n",'red',True)
             return
         if (args[0] == '*'):
             print(variables)
@@ -87,7 +91,7 @@ class Commands:
             print(variables[args[0]])
         except:
             # print("Error! Probably Variable Does not Exist")
-            self.gra.update_terminal_log("Error! Probably Variable Does not Exist",'red',True)
+            self.gra.update_terminal_log("Error! Probably Variable Does not Exist\n",'red',True)
 
 
     def stepResponse(self, args):
@@ -103,6 +107,7 @@ class Commands:
         T, yout = step_response(variables[args[0]])
         plt.plot(T,yout, label = args[0])
         plt.grid(True)
+        plt.title("Step Response")
         plt.xlabel("Time (s)")
         plt.ylabel("Amplitude")
         plt.legend()
@@ -116,15 +121,10 @@ class Commands:
             
             return
         
-        plt.ion()
         rlocus(variables[args[0]])
         plt.show()
     
     def bodePlot(self,args):
-        t1 = multiprocessing.Process(target=self.bodeCode, args=(args,))
-        t1.start()
-
-    def bodeCode(self,args):
         if len(args) != 1 and args[1] != 't':
             # print("Number Of Arguments Not Right!")
             self.gra.update_terminal_log("Number Of Arguments Not Right!",'red',True)
@@ -134,7 +134,7 @@ class Commands:
             plt.figure()
 
         # plt.ion()
-        bode_plot(variables[args[0]])
+        bode_plot(variables[args[0]],dB = True)
         # bode_plot(variables[args[0]], title="Bode` Plot for " + str(args[0]))
         plt.show()
 
@@ -163,6 +163,9 @@ class Commands:
         
         tmp = feedback(variables[args[0]],1)
         variables.update({args[1]:tmp})
+        self.gra.update_terminal_log(str(variables[args[1]]), "green")
+
+        
 
         
 
@@ -179,8 +182,6 @@ class Commands:
             print(k + ": {:.3f}".format(info[k]))
             self.gra.update_terminal_log(str(k),'white')
             self.gra.update_terminal_log(" : {:.3f}\n".format(info[k]),'white',True)
-
-
 
 
     def storeVariable(self, args):
@@ -221,8 +222,6 @@ class Commands:
             # print(bcolors.OKBLUE + cD.desc[c]+ bcolors.ENDC)
             self.gra.update_terminal_log("---> " + c + " ", bold =True)
             self.gra.update_terminal_log(cD.desc[c]+"\n","blue", bold =True)
-
-
 
     def preprocessor(self, arg):
         if arg[0] not in notToBePrepossed:
