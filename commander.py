@@ -6,10 +6,9 @@ class Commander:
 
     def getCommand(self,command):
         args = command.split()
-        if args[0] in self.cList.commands.keys():
-            # cList.commands[args[0]](args[1:])
-            # self.gra.update_terminal_log(cList.preprocessor(args))
-            return self.cList.preprocessor(args)
-        else:
-            print("Command '" + command + "' Not Found!")
-            self.app.update_terminal_log("Command '" + command + "' Not Found!", "red", True)
+        # if args[0] in self.cList.commands.keys():
+        #     return self.cList.preprocessor(args)
+        # else:
+        #     print("Command '" + command + "' Not Found!")
+        #     self.app.update_terminal_log("Command '" + command + "' Not Found!", "red", True)
+        self.cList.preprocessor(args)

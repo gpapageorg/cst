@@ -85,10 +85,15 @@ class Commands:
             self.gra.update_terminal_log("Number Of Arguments Not Right!\n",'red',True)
             return
         if (args[0] == '*'):
+            self.gra.update_terminal_log(str(variables),'green')
+            self.gra.update_terminal_log("\n",'red',True)
             print(variables)
             return
         try:
             print(variables[args[0]])
+            self.gra.update_terminal_log(str(variables[args[0]]),'green')
+            self.gra.update_terminal_log("\n",'red',True)
+
         except:
             # print("Error! Probably Variable Does not Exist")
             self.gra.update_terminal_log("Error! Probably Variable Does not Exist\n",'red',True)
@@ -134,7 +139,7 @@ class Commands:
             plt.figure()
 
         # plt.ion()
-        bode_plot(variables[args[0]],dB = True)
+        bode_plot(variables[args[0]],dB = True,margins=True,grid= True)
         # bode_plot(variables[args[0]], title="Bode` Plot for " + str(args[0]))
         plt.show()
 
@@ -224,21 +229,86 @@ class Commands:
             self.gra.update_terminal_log(cD.desc[c]+"\n","blue", bold =True)
 
     def preprocessor(self, arg):
-        if arg[0] not in notToBePrepossed:
-            for i in range(1, len(arg[1:])):
-                if arg[i].isalpha():
-                    try:
-                        arg[i] = str(variables[arg[i]])
-                    except:
-                        self.gra.update_terminal_log("Error! Probably Variable '" + arg[i] + "' Does not Exist","red", bold =True)
-                        print(bcolors.FAIL + bcolors.BOLD + "Error! Probably Variable '" + arg[i] + "' Does not Exist" + bcolors.ENDC)
-                        return
+        print(arg)
+        if len(arg) == 1:
+            try:
+                eqIndex = arg[0].index('=')
+                value = eval(arg[0][eqIndex+1:])
+                variables.update({arg[0][:eqIndex]:value})
+                self.gra.update_terminal_log(str(arg[0][:eqIndex]) + ' = ' + str(value) + '\n', "green")
+            except ValueError:
+                self.gra.update_terminal_log(str(eval(arg[0]))+'\n', "green")
 
-        if (arg[0] in toBeMultiprocessed):
-            self.processController(self.commands[arg[0]],arg[1:])
+        # print(eval('G',variables))
         else:
-            self.commands[arg[0]](arg[1:])
+            if arg[0] in self.commands.keys():
+                startComma = 0
+                endComma = 0
+                for i in  range(1,len(arg) - 1):
+                    arg[i] += ',' # adding , for algorithm
+                    # print(arg[i])
+                    while True:
+                        try:
+                            k = arg[i][endComma:].index(',')
+                            startComma = endComma
+                            endComma += k + 1
+                            # value  = eval(arg[i][startComma:endComma-1],variables)
+
+                            slice = arg[i][startComma:endComma-1].strip()
+                            # print(slice)
+                            arg[i] = arg[i].rstrip(',')
+
+                            if slice.isnumeric() is False:
+                                value = str(eval(slice,variables))
+                                print(arg[i], slice, value)
+                                arg[i] = arg[i].replace(slice, value)
+
+                                print(arg)
+
+                        except ValueError:
+                            # print(arg[i][endComma:])
+                            startComma = 0
+                            endComma = 0
+                            break   
+            else:
+                self.gra.update_terminal_log("Command '" + arg[0] + "' Not Found!\n", "red", True)
         
+
+        # if arg[0] not in notToBePrepossed:
+        #     for i in range(1, len(arg[1:])):
+        #         if arg[i].isalpha():
+        #             try:
+        #                 arg[i] = str(variables[arg[i]])
+        #             except:
+        #                 self.gra.update_terminal_log("Error! Probably Variable '" + arg[i] + "' Does not Exist","red", bold =True)
+        #                 print(bcolors.FAIL + bcolors.BOLD + "Error! Probably Variable '" + arg[i] + "' Does not Exist" + bcolors.ENDC)
+        #                 return
+        # print()
+        # isexpr = self.isExpression(arg[0])
+        # if arg[0] not in self.commands.keys() and not isexpr:
+        #     print("Command '" + "ok" + "' Not Found!")
+        #     self.gra.update_terminal_log("Command '" + arg[0] + "' Not Found!\n", "red", True)
+        #     return
+        
+        # if isexpr:
+        #     print(arg[0])
+        #     print(eval(arg[0]))
+
+        #     return
+        
+        # if (arg[0] in toBeMultiprocessed):
+        #     self.processController(self.commands[arg[0]],arg[1:])
+        # else:
+        #     self.commands[arg[0]](arg[1:])
+    
     def processController(self,func,args):
         p = multiprocessing.Process(target=func , args=(args,))
         p.start()
+
+    def isExpression(self, expr):
+        operators = ['+','-','*','/','**']
+        for l in expr:
+            if not l.isnumeric() and l not in operators:
+                return False
+        else:
+            return True
