@@ -254,8 +254,8 @@ class Commands:
                             startComma = endComma
                             endComma += k + 1
                             # value  = eval(arg[i][startComma:endComma-1],variables)
-                            
                             slice = arg[i][startComma:endComma-1]
+                            print(slice)
 
                             # print(startComma, endComma, slice)
 
@@ -263,6 +263,7 @@ class Commands:
                                 value = str(eval(slice,variables))
                                 #print(arg[i], slice, value)
                                 arg[i] = arg[i].replace(slice, value)
+                                endComma = endComma + (len(value) - len(slice))
                                 
                         except ValueError:
                             arg[i] = arg[i].rstrip(',')
@@ -272,7 +273,11 @@ class Commands:
                             endComma = 0
                             break
                 print("Final", arg)
-                            
+                if (arg[0] in toBeMultiprocessed):
+                    self.processController(self.commands[arg[0]],arg[1:])
+                else:
+                    self.commands[arg[0]](arg[1:])
+
             else:
                 self.gra.update_terminal_log("Command '" + arg[0] + "' Not Found!\n", "red", True)
         
@@ -298,10 +303,7 @@ class Commands:
 
         #     return
         
-        # if (arg[0] in toBeMultiprocessed):
-        #     self.processController(self.commands[arg[0]],arg[1:])
-        # else:
-        #     self.commands[arg[0]](arg[1:])
+        
     
     def processController(self,func,args):
         p = multiprocessing.Process(target=func , args=(args,))
