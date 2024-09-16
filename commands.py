@@ -246,34 +246,36 @@ class Commands:
                 endComma = 0
                 for i in  range(1,len(arg) - 1):
                     arg[i] += ',' # adding , for algorithm
-                    # print(arg[i])
+                    counter = 0
                     while True:
                         try:
+                            counter +=1
                             k = arg[i][endComma:].index(',')
                             startComma = endComma
                             endComma += k + 1
                             # value  = eval(arg[i][startComma:endComma-1],variables)
+                            
+                            slice = arg[i][startComma:endComma-1]
 
-                            slice = arg[i][startComma:endComma-1].strip()
-                            # print(slice)
+                            # print(startComma, endComma, slice)
+
+                            if slice.isnumeric() is False and slice != '':
+                                value = str(eval(slice,variables))
+                                #print(arg[i], slice, value)
+                                arg[i] = arg[i].replace(slice, value)
+                                
+                        except ValueError:
                             arg[i] = arg[i].rstrip(',')
 
-                            if slice.isnumeric() is False:
-                                value = str(eval(slice,variables))
-                                print(arg[i], slice, value)
-                                arg[i] = arg[i].replace(slice, value)
-
-                                print(arg)
-
-                        except ValueError:
                             # print(arg[i][endComma:])
                             startComma = 0
                             endComma = 0
-                            break   
+                            break
+                print("Final", arg)
+                            
             else:
                 self.gra.update_terminal_log("Command '" + arg[0] + "' Not Found!\n", "red", True)
         
-
         # if arg[0] not in notToBePrepossed:
         #     for i in range(1, len(arg[1:])):
         #         if arg[i].isalpha():
