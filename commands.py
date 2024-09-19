@@ -5,7 +5,7 @@ from colors import *
 import multiprocessing
 
 variables = {}
-notToBePrepossed = ['sv', 'ufeedback']
+notToBePrepossed = ['ufeedback']
 toBeMultiprocessed = ['step','bode', 'nyquist','rlocus']
 class Commands:
     def __init__(self, gra = 0):
@@ -20,9 +20,8 @@ class Commands:
                         "ufeedback": self.unityFeedback,
                         "bye": self.bye,
                         "allCommands": self.allCommands,
-                        "sv": self.storeVariable}
+                        }
         self.gra = gra
-
 
     def transferFunction(self, args):
         if len(args) != 3:
@@ -189,20 +188,6 @@ class Commands:
             self.gra.update_terminal_log(" : {:.3f}\n".format(info[k]),'white',True)
 
 
-    def storeVariable(self, args):
-        if len(args) != 2:
-            # print("Number Of Arguments Not Right!")
-            self.gra.update_terminal_log("Number Of Arguments Not Right!\n",'red',True)
-
-            return 
-        try:
-            var = float(args[0])
-        except:
-            print(bcolors.FAIL + bcolors.BOLD +"Type Error!"+bcolors.ENDC)
-            return
-
-        variables.update({args[1]:var})
-
     def bye(self, args):
         if len(args) != 0:
             # print("Number Of Arguments Not Right!")
@@ -272,8 +257,9 @@ class Commands:
                             startComma = 0
                             endComma = 0
                             break
+
                 print("Final", arg)
-                if (arg[0] in toBeMultiprocessed):
+                if (arg[0] in toBeMultiprocessed): #Executing Command
                     self.processController(self.commands[arg[0]],arg[1:])
                 else:
                     self.commands[arg[0]](arg[1:])
