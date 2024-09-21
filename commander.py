@@ -1,8 +1,8 @@
 import commands as c
 class Commander:
-    def __init__(self,app):
-        self.app = app
-        self.cList = c.Commands(app)
+    def __init__(self):
+        # self.app = app
+        self.cList = c.Commands()
 
     def getCommand(self,command):
         args = command.split()

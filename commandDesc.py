@@ -9,4 +9,5 @@ desc = {"ss": "State Space Model, Usage: ss matA matB matC matD dstVar, For matr
         "ufeedback": "Unity Feedback, Usage ufeedback InVar DstVar",
         "bye": "Bye...",
         "allCommands": "Print All Commands",
-        "sv": "Save Value to Variable, Usage sv G 5 -> G = 5"}
+        "clc": "Clear Terminal",
+        "cvars": "Clear All Variables"}

@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import font
 import interaction as i
 import commander as c
-import threading
+import ctypes
 
 class Graphics():
     # Main Application Window
@@ -99,4 +99,7 @@ def main():
 
     app.root.mainloop()
 if __name__ == "__main__":
+    # libX11 = ctypes.cdll.LoadLibrary("libX11.so")
+    # libX11.XInitThreads()
+
     main()
