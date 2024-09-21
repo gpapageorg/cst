@@ -88,22 +88,33 @@ class Commands:
 
     def printVar(self, args):
         if len(args) != 1:
-            # print("Number Of Arguments Not Right!")
-            self.gra.update_terminal_log("Number Of Arguments Not Right!\n",'red',True)
+            print(bcolors.FAIL+bcolors.BOLD+"Number Of Arguments Not Right!"+bcolors.ENDC)
+            # self.gra.update_terminal_log("Number Of Arguments Not Right!\n",'red',True)
             return
+        
         if (args[0] == '*'):
-            self.gra.update_terminal_log(str(variables),'green')
-            self.gra.update_terminal_log("\n",'red',True)
-            print(variables)
+            # self.gra.update_terminal_log(str(variables),'green')
+            # self.gra.update_terminal_log("\n",'red',True)
+            try:
+                keysToPrint = list(variables.keys())
+                keysToPrint.remove('__builtins__')
+            except:
+                keysToPrint = list(variables.keys())
+
+            print(bcolors.OKGREEN, end='')
+            for i in keysToPrint:
+                print(i,'-->', variables[i])
+            print(bcolors.ENDC, end='')
+            # print(variables)
             return
         try:
-            print(variables[args[0]])
-            self.gra.update_terminal_log(str(variables[args[0]]),'green')
-            self.gra.update_terminal_log("\n",'red',True)
+            print(bcolors.OKGREEN + str(variables[args[0]]) + bcolors.ENDC)
+            # self.gra.update_terminal_log(str(variables[args[0]]),'green')
+            # self.gra.update_terminal_log("\n",'red',True)
 
         except:
-            # print("Error! Probably Variable Does not Exist")
-            self.gra.update_terminal_log("Error! Probably Variable Does not Exist\n",'red',True)
+            print(bcolors.FAIL + bcolors.BOLD + "Error! Probably Variable" + str(args[0]) + "Does not Exist" + bcolors.ENDC)
+            # self.gra.update_terminal_log("Error! Probably Variable Does not Exist\n",'red',True)
 
 
     def stepResponse(self, args):
