@@ -1,11 +1,13 @@
 import interaction as i
-import commander as c
+# import commander as c
+import commands as c
 import readline
 from graphics import Graphics
 
 def main():
     i.Interaction()
-    com = c.Commander()
+    # com = c
+    com = c.Commands()
 
     while True:
         try:

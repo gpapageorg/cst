@@ -266,68 +266,67 @@ class Commands:
             return
         
 
-    def preprocessor(self, arg):
-        # if len(arg) == 1 and arg[0] not in self.commands.keys():
+    def preprocessor(self):
+        # if len(arg) == 1 and self.args[0] not in self.commands.keys():
  
         # print(eval('G',variables))   
-        if arg[0] in self.commands.keys():
+        if self.args[0] in self.commands.keys():
             startComma = 0
             endComma = 0
-            for i in  range(1,len(arg) - 1):
-                arg[i] += ',' # adding , for algorithm
+            for i in  range(1,len(self.args) - 1):
+                self.args[i] += ',' # adding , for algorithm
                 counter = 0
                 while True:
                     try:
                         counter +=1
-                        k = arg[i][endComma:].index(',')
+                        k = self.args[i][endComma:].index(',')
                         startComma = endComma
                         endComma += k + 1
-                        # value  = eval(arg[i][startComma:endComma-1],variables)
-                        slice = arg[i][startComma:endComma-1]
+                        # value  = eval(self.args[i][startComma:endComma-1],variables)
+                        slice = self.args[i][startComma:endComma-1]
                         # print(slice)
 
                         # print(startComma, endComma, slice)
 
                         if slice.isnumeric() is False and slice != '':
                             value = str(eval(slice,variables))
-                            #print(arg[i], slice, value)
-                            arg[i] = arg[i].replace(slice, value)
+                            #print(self.args[i], slice, value)
+                            self.args[i] = self.args[i].replace(slice, value)
                             endComma = endComma + (len(value) - len(slice))
                             
                     except ValueError:
-                        arg[i] = arg[i].rstrip(',')
+                        self.args[i] = self.args[i].rstrip(',')
 
-                        # print(arg[i][endComma:])
+                        # print(self.args[i][endComma:])
                         startComma = 0
                         endComma = 0
                         break
 
-            # print("Final", arg)
-            #if (arg[0] in toBeMultiprocessed): #Executing Command
-            #    self.processController(self.commands[arg[0]],arg[1:])
+            # print("Final", self.args)
+            #if (self.args[0] in toBeMultiprocessed): #Executing Command
+            #    self.processController(self.commands[self.args[0]],self.args[1:])
             #else:
-            self.commands[arg[0]](arg[1:])
+            self.commands[self.args[0]](self.args[1:])
 
-        elif (len(arg) == 1):
+        elif (len(self.args) == 1):
             try:
-                eqIndex = arg[0].index('=')
-                value = eval(arg[0][eqIndex+1:],variables)
-                variables.update({arg[0][:eqIndex]:value})
-                # self.gra.update_terminal_log(str(arg[0][:eqIndex]) + ' = ' + str(value) + '\n', "green")
-                print(bcolors.OKGREEN+str(arg[0][:eqIndex]) + ' = ' + str(value)+bcolors.ENDC)
+                eqIndex = self.args[0].index('=')
+                value = eval(self.args[0][eqIndex+1:],variables)
+                variables.update({self.args[0][:eqIndex]:value})
+                # self.gra.update_terminal_log(str(self.args[0][:eqIndex]) + ' = ' + str(value) + '\n', "green")
+                print(bcolors.OKGREEN+str(self.args[0][:eqIndex]) + ' = ' + str(value)+bcolors.ENDC)
             except ValueError:
-                # self.gra.update_terminal_log(str(eval(arg[0]))+'\n', "green")
+                # self.gra.update_terminal_log(str(eval(self.args[0]))+'\n', "green")
                 try:
-                    print(bcolors.OKGREEN + str(eval(arg[0],variables) + bcolors.ENDC))
+                    print(bcolors.OKGREEN + str(eval(self.args[0],variables) + bcolors.ENDC))
                 except:
-                    print(bcolors.FAIL+bcolors.BOLD+"Command '" + arg[0] + "' Not Found!"+bcolors.ENDC)
+                    print(bcolors.FAIL+bcolors.BOLD+"Command '" + self.args[0] + "' Not Found!"+bcolors.ENDC)
 
         else:
-            # self.gra.update_terminal_log("Command '" + arg[0] + "' Not Found!\n", "red", True)
-            print("Command '" + arg[0] + "' Not Found!\n")
+            # self.gra.update_terminal_log("Command '" + self.args[0] + "' Not Found!\n", "red", True)
+            print("Command '" + self.args[0] + "' Not Found!\n")
               
-    
-    def processController(self,func,args):
-        # p = multiprocessing.Process(target=func , args=(args,))
-        p = threading.Thread(target=func , args=(args,))
-        p.start()
+
+    def getCommand(self,command):
+            self.args = command.split()
+            self.preprocessor()
