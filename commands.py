@@ -312,8 +312,10 @@ class Commands:
             except ValueError:
                 # self.gra.update_terminal_log(str(eval(self.args[0]))+'\n', "green")
                 try:
-                    print(bcolors.OKGREEN + str(eval(self.args[0],variables) + bcolors.ENDC))
-                except:
+                    print(bcolors.OKGREEN + str(eval(self.args[0],variables)) + bcolors.ENDC)
+                except Exception as e:
+                    print(type(self.args[0]))
+                    print(e)
                     print(bcolors.FAIL+bcolors.BOLD+"Command '" + self.args[0] + "' Not Found!"+bcolors.ENDC)
 
         else:
