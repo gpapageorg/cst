@@ -2,7 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import font
 import interaction as i
-import commander as c
+# import commander as c
 import ctypes
 
 class Graphics():

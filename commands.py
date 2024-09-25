@@ -35,7 +35,7 @@ class Commands:
         den = args[1].split(',')
 
         if ('' in num) or ('' in den):
-            print("Format Error!")
+            print(bcolors.FAIL + bcolors.BOLD+"Format Error!" + bcolors.ENDC)
             # self.gra.update_terminal_log("Format Error!\n", "red",True)
             return
 
@@ -52,9 +52,8 @@ class Commands:
         
     def stateSpace(self, args):
         if len(args) != 5:
-            # print("Number Of Arguments Not Right!")
+            print(bcolors.FAIL+bcolors.BOLD+"Number Of Arguments Not Right!"+bcolors.ENDC)
             # self.gra.update_terminal_log("Number Of Arguments Not Right!\n",'red',True)
-            print("Number Of Arguments Not Right!")
             return
         
         '''Splitting string to get A, B, C, D matrices'''
@@ -65,15 +64,14 @@ class Commands:
         try:
             s = ss(aMat,bMat,cMat,dMat)
         except ValueError:
-            # print("Error! Matrices Not Given Right")
             # self.gra.update_terminal_log("Error! Matrices Not Given Righ\nt",'red',True)
-            print("Error! Matrices Not Given Right")
+            print(bcolors.FAIL + bcolors.BOLD + "Error! Matrices Not Given Right" + bcolors.ENDC)
             
             return
         variables.update({args[4]:s})
         # self.gra.update_terminal_log("G = ", "green")
-        self.gra.update_terminal_log(str(variables[args[4]]), "green")
-
+        # self.gra.update_terminal_log(str(variables[args[4]]), "green")
+        print(bcolors.OKGREEN + str(variables[args[4]]) + bcolors.ENDC)
     
     def splitMat(self, st):
         mat = st.split(';')
@@ -268,7 +266,6 @@ class Commands:
 
     def preprocessor(self):
         # if len(arg) == 1 and self.args[0] not in self.commands.keys():
- 
         # print(eval('G',variables))   
         if self.args[0] in self.commands.keys():
             startComma = 0
@@ -284,12 +281,9 @@ class Commands:
                         endComma += k + 1
                         # value  = eval(self.args[i][startComma:endComma-1],variables)
                         slice = self.args[i][startComma:endComma-1]
-                        # print(slice)
-
-                        # print(startComma, endComma, slice)
 
                         if slice.isnumeric() is False and slice != '':
-                            value = str(eval(slice,variables))
+                            value = str(self.smartEval(slice,variables))
                             #print(self.args[i], slice, value)
                             self.args[i] = self.args[i].replace(slice, value)
                             endComma = endComma + (len(value) - len(slice))
@@ -326,6 +320,23 @@ class Commands:
             # self.gra.update_terminal_log("Command '" + self.args[0] + "' Not Found!\n", "red", True)
             print("Command '" + self.args[0] + "' Not Found!\n")
               
+
+    def smartEval(self,st, variables):
+        'Smarter version of eval() O(n) Complexity'
+        if ';' in st:
+            print(st)
+            strLst = st.split(';')
+            fin = ''
+            for i in strLst:
+                val = str(eval(i,variables))
+                fin += val + ';'
+            fin = fin.rstrip(';')
+            return fin
+            
+        else:
+            fin = eval(st,variables)
+            return fin
+
 
     def getCommand(self,command):
             self.args = command.split()
